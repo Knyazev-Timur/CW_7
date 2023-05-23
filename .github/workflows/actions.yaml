@@ -59,7 +59,7 @@ jobs:
           script: |-
             whoami
             cd deploy
-            echo skyprohw34 | sudo -S docker-compose up -d
+            echo "skyprohw34" | sudo -S docker-compose up -d
 
 
       # ========= REMOVING INACTIVE IMAGES ============
