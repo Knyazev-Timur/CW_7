@@ -46,7 +46,7 @@ jobs:
           host: ${{ secrets.HOST}}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "deploy_ci/docker-compose.yaml, deploy_ci/.env"
+          source: "deploy_ci/docker-compose.yaml"
           target: "deploy_ci"
           strip_components: 1
 
