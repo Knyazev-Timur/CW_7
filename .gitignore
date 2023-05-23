@@ -7,3 +7,4 @@
 /Dockerfile
 /requirements.txt
 /.env
+/venv/
