@@ -18,8 +18,8 @@ services:
       - my-network
     image: charfull/cw_7:${GIT_HUB_REF_NAME}-${GIT_HUB_RUN_ID}
     restart: always
-    env_file:
-      - .env
+#    env_file:
+#      - .env
     depends_on:
       db:
         condition: service_healthy
