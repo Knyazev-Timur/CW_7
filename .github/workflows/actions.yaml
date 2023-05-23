@@ -35,9 +35,9 @@ jobs:
 
       - name: Render configs
         run: |-
-          mkdir deploy_ci
-          cat docker-compose-ci.yaml | envsubst > deploy_ci/docker-compose.yaml
-#          cat ./.env | envsubst > deploy_ci/.env
+          mkdir deploy
+          cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
+#          cat ./.env | envsubst > deploy/.env
 
       # ========= BEGIN SSH EXIT ==========
       - name: Copy on Server
@@ -46,8 +46,8 @@ jobs:
           host: ${{ secrets.HOST}}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "deploy_ci/docker-compose.yaml"
-          target: "deploy_ci"
+          source: "deploy/docker-compose.yaml"
+          target: "deploy"
           strip_components: 1
 
       # ========== START DOCKER CONTAINER ==========
@@ -59,7 +59,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |-
             whoami
-            cd deploy_ci
+            cd deploy
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
 
 
