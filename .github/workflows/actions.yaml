@@ -1,0 +1,102 @@
+name: Build and deploy workflow
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - HW34
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+          logout: true
+
+      - name: Build and Push Container
+        run: |-
+          docker build -t charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+          docker push charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: clone code
+#        uses: actions/checkout@v3
+#      - name: docker building
+#        run: docker build -t charfull/cw_7:${{ secrets.GIT_HUB_REF_NAME }} .
+#      - name: docker login
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKER_USER }}
+#          password: ${{ secrets.DOCKER_PASS  }}
+#      - name: docker push
+#        run: docker push charfull/cw_7:hw34
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      POSTGRES_PASSWORD: ${{ secrets.PASSWORD }}
+      POSTGRES_USER: ${{ secrets.USERNAME }}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v3
+      - name: render configs
+        run: |
+          mkdir deploy_ci
+          cat docker-compose-ci.yaml | envsubst > deploy_ci/docker-compose.yaml
+          cat ./.env |  envsubst > deploy_ci/.env
+#          mkdir deploy_ci
+#          cat ./docker-compose-ci.yaml | envsubst > deploy_ci/docker-compose.yaml
+#          cat ./.env | envsubst > deploy_ci/.env
+
+      - name: Cleanup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST}}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            docker system prune -a -f    
+
+#      - name: copy files to server
+#        uses: appleboy/ssh-action@master
+#        with:
+##          run: |
+##            mkdir todolist
+##            cat docker-compose-ci.yami | envsubst > todolist/docker-compose.yaml
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          password: ${{ secrets.SSH_PASSWORD }}
+##          source: "deploi_ci/docker-compose.yaml,doploy_ci/.env"
+#          source: "deploi_ci/*"
+#          target: "todolist"
+#          strip_components: 1"
+      - name: Copy on Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST}}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "deploy_ci/*"
+          target: "todolist"
+          strip_components: 1
+
+      - name: deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd todolist
+            docker-compose down
+            docker-compose up -d
+#            docker-compose up -d
