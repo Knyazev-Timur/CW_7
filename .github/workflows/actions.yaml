@@ -37,7 +37,6 @@ jobs:
         run: |-
           mkdir deploy
           cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
-#          cat ./.env | envsubst > deploy/.env
 
       # ========= BEGIN SSH EXIT ==========
       - name: Copy on Server
