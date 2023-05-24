@@ -67,7 +67,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: |
+          script: |-
+            whoami
             cd deploy
             docker-compose down
             docker-compose up -d
