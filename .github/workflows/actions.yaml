@@ -50,16 +50,27 @@ jobs:
           strip_components: 1
 
       # ========== START DOCKER CONTAINER ==========
+#      - name: deploy app
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          password: ${{ secrets.SSH_PASSWORD }}
+#          script: |-
+#            whoami
+#            cd deploy
+#            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
+
       - name: deploy app
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: |-
-            whoami
+          script: |
             cd deploy
-            sudo -S docker-compose up -d
+            docker-compose down
+            docker-compose up -d
 
 
       # ========= REMOVING INACTIVE IMAGES ============
