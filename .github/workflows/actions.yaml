@@ -70,7 +70,6 @@ jobs:
           script: |-
             whoami
             cd deploy
-            docker-compose down
             docker-compose up -d
 
 
