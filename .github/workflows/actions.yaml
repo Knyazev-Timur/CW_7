@@ -19,8 +19,8 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-        docker build -t charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
-        docker push charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+          docker build -t charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+          docker push charfull/cw_7:$GITHUB_REF_NAME-$GITHUB_RUN_ID
 
   deploy:
     needs: build_and_push
