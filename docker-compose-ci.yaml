@@ -18,8 +18,8 @@ services:
       - my-network
     image: charfull/cw_7:${GIT_HUB_REF_NAME}-${GIT_HUB_RUN_ID}
     restart: always
-#    env_file:
-#      - .env
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -35,12 +35,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-      POSTGRES_HOST: "db"
+    env_file:
+      - .env
+#    environment:
+#      POSTGRES_DB: ${DB_NAME}
+#      POSTGRES_USER: ${DB_USER}
+#      POSTGRES_PASSWORD: ${DB_PASSWORD}
+#      SECRET_KEY: ${SECRET_KEY}
+#      POSTGRES_HOST: "db"
     command: sh -c "python ./manage.py migrate"
 
   db:
@@ -51,12 +53,15 @@ services:
     restart: always
 
     # Задание переменных окружения для контейнера с postgres
-#    ports:
-#      - "5432:5432"
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+#    environment:
+#      POSTGRES_DB: ${DB_NAME}
+#      POSTGRES_USER: ${DB_USER}
+#      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
 
      # Связывание тома с директорией в контейнере для сохранения данных postgres
     volumes:
