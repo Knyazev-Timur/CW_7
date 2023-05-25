@@ -44,10 +44,10 @@ services:
 #      SECRET_KEY: ${SECRET_KEY}
 #      POSTGRES_HOST: "db"#
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      SECRET_KEY: 'django-insecure-x!$*ildyg1*i&o*%np3l7m*a!shaa_p9f1734c1gzxj0#(nb-5'
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      SECRET_KEY: "'django-insecure-x!$*ildyg1*i&o*%np3l7m*a!shaa_p9f1734c1gzxj0#(nb-5'"
       POSTGRES_HOST: "db"
     command: sh -c "python ./manage.py migrate"
 
@@ -68,9 +68,9 @@ services:
 #      POSTGRES_USER: ${DB_USER}
 #      POSTGRES_PASSWORD: ${DB_PASSWORD}
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
 
 
      # Связывание тома с директорией в контейнере для сохранения данных postgres
